@@ -32,8 +32,7 @@ GDPdata$GDP_USD <- as.numeric(GDPdata$GDP_USD)
 # Create Income Group Data Frame from the bottom rows of GDPdata.  Create JustGDPData data frame to house only GDP amounts and rankings per country
 # The income group is a higher level classification of GDP when compared to country level data.
 IncomeGroup <- subset(GDPdata, as.numeric(rownames(GDPdata)) > 217)
-JustGDPdata <- subset(GDPdata, as.numeric(rownames(GDPdata)) <= 217)
-JustGDPdata <- subset(JustGDPdata, CountryCode != 'WLD')
+JustGDPdata <- subset(GDPdata, as.numeric(rownames(GDPdata)) <= 217 & CountryCode != 'WLD')
 IncomeGroup <- rename(IncomeGroup, IG_GDP_USD = GDP_USD)
 
 # Delete blank columns from Income Group
@@ -48,8 +47,13 @@ MergeGDPandStat <- arrange(MergeGDPandStat, GDP_USD)
 cat(MergeGDPandStat$Long.Name[13], "is the country with the 13th lowest GDP.")
 
 # Calculate average GDP rankings for the "High income: OECD" and "High income: nonOECD" groups
+HIOECDGDP <- subset(MergeGDPandStat, MergeGDPandStat$Income.Group == "High income: OECD")
+cat("The mean GDP ranking for High income: OECD countries is", mean(HIOECDGDP$Ranking))
 
-# Plot GDP for all countries
+HINOECDGDP <- subset(MergeGDPandStat, MergeGDPandStat$Income.Group == "High income: nonOECD")
+cat("The mean GDP ranking for High income: nonOECD countries is", mean(HINOECDGDP$Ranking, na.rm = TRUE))
+
+# Plot GDP for all countries by Income Group.  Remove NAs in JustGDPdata.
 
 
 # Create quantile groups for GDP Rankings and compare to Income Group (Gartner MQ Style).  
