@@ -38,9 +38,10 @@ IncomeGroup <- rename(IncomeGroup, IG_GDP_USD = GDP_USD)
 # Delete blank columns from Income Group
 IncomeGroup <- subset(IncomeGroup, select = -(c(2,5)))
 
-# Merge Files and print statement indicating the number of matches
+# Merge Files and print statement indicating the number of matches.  Then remove NA values.
 MergeGDPandStat <- merge(JustGDPdata, FedStats, by="CountryCode")
-cat("There were", nrow(MergeGDPandStat), "matches between GDPdata and FedSTATS.")
+cat("There are", nrow(MergeGDPandStat), "matches between GDPdata and FedSTATS.")
+MergeGDPandStat <- subset(MergeGDPandStat, complete.cases(MergeGDPandStat$Ranking) == TRUE)
 
 # Sort data ascending by GDP and identify the 13th country post sort.
 MergeGDPandStat <- arrange(MergeGDPandStat, GDP_USD)
@@ -58,3 +59,7 @@ cat("The mean GDP ranking for High income: nonOECD countries is", mean(HINOECDGD
 
 # Create quantile groups for GDP Rankings and compare to Income Group (Gartner MQ Style).  
 ## Try using quantile() function
+#GDPRankQuant <- as.numeric(quantile(MergeGDPandStat$Ranking))
+#create new column in MergeGDPandStat for Quantile group based on GDPRankQuant.  
+#define method to avoid hard coded values
+MergeGDPandStat$QuantileGroup <- findInterval(MergeGDPandStat$Ranking, c(0, 38, 76, 114, 152, 190), rightmost.closed = TRUE)
