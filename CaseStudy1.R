@@ -54,12 +54,20 @@ cat("The mean GDP ranking for High income: OECD countries is", mean(HIOECDGDP$Ra
 HINOECDGDP <- subset(MergeGDPandStat, MergeGDPandStat$Income.Group == "High income: nonOECD")
 cat("The mean GDP ranking for High income: nonOECD countries is", mean(HINOECDGDP$Ranking, na.rm = TRUE))
 
-# Plot GDP for all countries by Income Group.  Remove NAs in JustGDPdata.
-
+# Plot GDP for all countries by Income Group. 
+#ADD COLOR BY INCOME GROUP
+ggplot(MergeGDPandStat, aes(MergeGDPandStat$Income.Group, MergeGDPandStat$GDP_USD)) +geom_bar(stat = "identity", aes(fill = Income.Group))
 
 # Create quantile groups for GDP Rankings and compare to Income Group (Gartner MQ Style).  
-## Try using quantile() function
-#GDPRankQuant <- as.numeric(quantile(MergeGDPandStat$Ranking))
 #create new column in MergeGDPandStat for Quantile group based on GDPRankQuant.  
-#define method to avoid hard coded values
-MergeGDPandStat$QuantileGroup <- findInterval(MergeGDPandStat$Ranking, c(0, 38, 76, 114, 152, 190), rightmost.closed = TRUE)
+int1 <- round((max(MergeGDPandStat$Ranking)/5))
+int2 <- round((max(MergeGDPandStat$Ranking)/5*2))
+int3 <- round((max(MergeGDPandStat$Ranking)/5*3))
+int4 <- round((max(MergeGDPandStat$Ranking)/5*4))
+int5 <- round(max(MergeGDPandStat$Ranking))
+MergeGDPandStat$QuantileGroup <- findInterval(MergeGDPandStat$Ranking, c(0, int1, int2, int3, int4, int5), rightmost.closed = TRUE)
+
+# subset MergeGDPandStat to get table with Quantile Group 1 and income group of 'Lower Middle Income'
+Q5 <- subset(MergeGDPandStat, MergeGDPandStat$QuantileGroup=="1" & MergeGDPandStat$Income.Group=="Lower middle income")
+cat(nrow(Q5), "countries are Lower middle income and among the 38 nations with highest GDP")
+#Q5Count <- count(MergeGDPandStat, MergeGDPandStat$QuantileGroup=="1" & MergeGDPandStat$Income.Group=="Lower middle income", sort = FALSE)
