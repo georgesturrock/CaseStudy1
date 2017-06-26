@@ -56,7 +56,7 @@ cat("The mean GDP ranking for High income: nonOECD countries is", mean(HINOECDGD
 
 # Plot GDP for all countries by Income Group. 
 #ADD COLOR BY INCOME GROUP
-ggplot(MergeGDPandStat, aes(MergeGDPandStat$Income.Group, MergeGDPandStat$GDP_USD)) +geom_bar(stat = "identity", aes(fill = Income.Group))
+ggplot(MergeGDPandStat, aes(MergeGDPandStat$Income.Group, MergeGDPandStat$GDP_USD)) +geom_bar(stat = "identity", aes(fill = Income.Group)) +labs(x = "Income Group", y = "GDP")
 
 # Create quantile groups for GDP Rankings and compare to Income Group (Gartner MQ Style).  
 #create new column in MergeGDPandStat for Quantile group based on GDPRankQuant.  
