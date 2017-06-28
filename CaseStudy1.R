@@ -43,6 +43,7 @@ MergeGDPandStat <- merge(JustGDPdata, FedStats, by="CountryCode")
 cat("There are", nrow(MergeGDPandStat), "matches between GDPdata and FedSTATS.")
 MergeGDPandStat <- subset(MergeGDPandStat, complete.cases(MergeGDPandStat$Ranking) == TRUE)
 
+### Analyze Data ####################################################################################
 # Sort data ascending by GDP and identify the 13th country post sort.
 MergeGDPandStat <- arrange(MergeGDPandStat, GDP_USD)
 cat(MergeGDPandStat$Long.Name[13], "is the country with the 13th lowest GDP.")
