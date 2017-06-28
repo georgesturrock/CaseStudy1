@@ -2,7 +2,9 @@
 title: "CS1Markdown1"
 author: "George Sturrock"
 date: "June 27, 2017"
-output: html_document
+output:
+  html_document: default
+  word_document: default
 ---
 
 ## Introduction
@@ -27,12 +29,62 @@ head(GDPdata)
 head(FedStats)
 ```
 
+The code used to import the source data into R data frames is shown below.  It is commented out as is has already been executed in the preceeding chunk.
+
+```{r}
+# Dowload GDP and educational data
+#download("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv", destfile = "GDPdata.csv")
+#download("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv", destfile = "FEDSTATS.csv")
+
+# Read CSV Data 
+#GDPdata <- read.csv("GDPdata.csv", stringsAsFactors = FALSE, header = FALSE, skip = 5, skipNul = TRUE)
+#FedStats <- read.csv("FEDSTATS.csv", stringsAsFactors = FALSE, header = TRUE)
+```
+
 ### Data Cleansing and Merging
-The data cleansing and merging script prepares the GDP and Educational Statistics data for analysis.  The script begins by deleting blank columns from the GDP data.  GDP data columns are then renamed to enhance readability of the data frame and future code.  The GDP data also has several rows with a blank country code.  These rows are removed.  GDP data columns are then coerced to the correct data types to allow for accurate analysis.  The GDP data also contains two different sets of data in the same file.  Rows 1 through 217 contain GDP rankings.  The rows higher than 217 contain GDP by income group.  An income group data frame is created for future analysis.  GDP data is subset of only include just GDP data at a country code level.  The resulting data frame is named "JustGDPdata".  
+The data cleansing and merging script prepares the GDP and Educational Statistics data for analysis.  The script begins by deleting blank columns from the GDP data.  
+```{r}
+#delcols <- c(3, 7:10)
+#GDPdata <- subset(GDPdata, select=-delcols)
+```
 
-The Educational Statistics are fairly clean.  "FedStats" is merged with "JustGDPdata" to create a consolidated data fram named "MergeGDPandStat".  This will be the primary data frame used for analysis.  The number of matches during the merge is recorded and displayed.  "MergeGDPandStat" is then subset of include on those rows with a GDP Ranking.  
+GDP data columns are then renamed to enhance readability of the data frame and future code.  
+```{r}
+#GDPdata <- rename(GDPdata, CountryCode = V1, Ranking = V2, Economy = V4, GDP_USD = V5)
+```
 
-```{r cleanse, warning=FALSE}
+The GDP data also has several rows with a blank country code.  These rows are removed.  
+```{r}
+#GDPdata <- subset(GDPdata, CountryCode != "")
+```
+
+GDP data columns are then coerced to the correct data types to allow for accurate analysis.  
+```{r}
+#GDPdata$CountryCode <- as.factor(GDPdata$CountryCode)
+#GDPdata$Ranking <- as.integer(GDPdata$Ranking)
+#GDPdata$GDP_USD <- gsub(",", "", GDPdata$GDP_USD)
+#GDPdata$GDP_USD <- as.numeric(GDPdata$GDP_USD)
+```
+
+The GDP data also contains two different sets of data in the same file.  Rows 1 through 217 contain GDP rankings.  The rows higher than 217 contain GDP by income group.  An income group data frame is created for future analysis.  GDP data is subset to only include just GDP data at a country code level.  The resulting data frame is named "JustGDPdata".
+```{r}
+#IncomeGroup <- subset(GDPdata, as.numeric(rownames(GDPdata)) > 217)
+#JustGDPdata <- subset(GDPdata, as.numeric(rownames(GDPdata)) <= 217 & CountryCode != 'WLD')
+#IncomeGroup <- rename(IncomeGroup, IG_GDP_USD = GDP_USD)
+#
+#IncomeGroup <- subset(IncomeGroup, select = -(c(2,5)))
+```
+
+The Educational Statistics are fairly clean.  "FedStats" is merged with "JustGDPdata" to create a consolidated data fram named "MergeGDPandStat".  This will be the primary data frame used for analysis.  The number of matches during the merge is recorded and displayed.  "MergeGDPandStat" is then subset of include on those rows with a GDP Ranking.  Question 1 is also answered in this section and stored in the variable named Q1 for future reference.
+```{r}
+#MergeGDPandStat <- merge(JustGDPdata, FedStats, by="CountryCode")
+#Q1 <- nrow(MergeGDPandStat)
+#cat("There are", nrow(MergeGDPandStat), "matches between GDPdata and FedSTATS.")
+#MergeGDPandStat <- subset(MergeGDPandStat, complete.cases(MergeGDPandStat$Ranking) == TRUE)
+```
+
+The entire data cleansing script is sourced in the following chunk.
+```{r cleanse, warning=FALSE, results='hide'}
 source("CS1CleanseData.R")
 head(MergeGDPandStat)
 ```
@@ -40,11 +92,11 @@ head(MergeGDPandStat)
 ### Data Analysis
 The data analysis section addresses the data analysis requirements specified in the Case Study document.  The analysis script begins by sorting "MergeGDPandStat" by GDP ascending.  The country with the 13th lowest GDP is then identified.  The average GDP rankings for the "High income: OECD" and "High income: nonOECD" income groups is calculated.  A bar chart showing GDP per Income Group is then created and printed.  Next, each row is assigned a quantile group based upon GDP ranking.  The number of countries which are in the top 38 GDP Rankings and part of the "Lower middle income" income group.  
 
-```{r analyze, fig.width=10}
+```{r analyze, fig.width=10, results='hide', fig.show='hide'}
 source("CS1AnalyzeData.R")
 ```
 
-## Questions and Answers
+#### Questions and Answers
 1.  Merge the data based on the country shortcode. How many of the IDs match? 
 ```{r}
 cat("There are", Q1, "matches between GDPdata and FedSTATS.")
@@ -73,3 +125,6 @@ cat(nrow(Q5), "countries are Lower middle income and among the 38 nations with h
 ```
 
 ## Conclusion
+The GPD and Educational Statistics data used as input into the project are of verying level of quality.  The GDP data requires quite a bit of cleansing considering the limited number of columns.  The World Bank should consider implementing the steps shown in the Data Cleansing portion of this project to reduce the amount of data engineering required to arrive at a usable data set.  The Educational Statistics data set required minimal cleansing.  
+
+The analysis of the combined data sets focused on GDP amounts, GDP Rankings and Income Groups to answer the required questions.  The data shows the vast majority of the worlds GDP is generated by 'High Income: OECD' countries.  Surprisingly, 'Lower middle income' countries combine to produce a greater total GDP than countries in the 'Upper middle income' and 'High income: non OECD' income groups.  Further analysis is necessary to determine the exact cause.  The Educational Statistics data contains a variety of information that could provide addtional insight into the relationship between GDP and educational statistics.
