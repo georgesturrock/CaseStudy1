@@ -6,7 +6,7 @@ The analysis presented in this presentation is based upon Gross Domestic Product
 Code
 ----
 
-All coding for this analysis was created using R Studio to create R Script files. A single R Make-like file named "Makefile.R" was created to execute the data import, cleansing and analysis processes. The code sourced by "Makefile.R" is divided into four different R script files: CS1loadLibraries.R, CS1DLoadandRead.R, CS1CleanseData.R and CS1AnalyzeData.R. Additional details for each R script file are presented below.
+All coding for this analysis was created using R Studio to create R Script files. A single R Make-like file named "Makefile.R" was created to execute the data import, cleansing and analysis processes. The code can be sourced by "Makefile.R" and is divided into four different R script files: CS1loadLibraries.R, CS1DLoadandRead.R, CS1CleanseData.R and CS1AnalyzeData.R. Additional details for each R script file are presented below.
 
 ### Libraries
 
@@ -214,7 +214,7 @@ source("CS1AnalyzeData.R")
 
 #### Questions and Answers
 
-1.  Merge the data based on the country shortcode. How many of the IDs match?
+Question 1. Merge the data based on the country shortcode. How many of the IDs match?
 
 ``` r
 cat("There are", Q1, "matches between GDPdata and FedSTATS.")
@@ -222,7 +222,7 @@ cat("There are", Q1, "matches between GDPdata and FedSTATS.")
 
     ## There are 210 matches between GDPdata and FedSTATS.
 
-1.  Sort the data frame in ascending order by GDP (so United States is last). What is the 13th country in the resulting data frame?
+Question 2. Sort the data frame in ascending order by GDP (so United States is last). What is the 13th country in the resulting data frame?
 
 ``` r
 cat(MergeGDPandStat$Long.Name[13], "is the country with the 13th lowest GDP.  ")
@@ -230,7 +230,7 @@ cat(MergeGDPandStat$Long.Name[13], "is the country with the 13th lowest GDP.  ")
 
     ## St. Kitts and Nevis is the country with the 13th lowest GDP.
 
-1.  What are the average GDP rankings for the "High income: OECD" and "High income: nonOECD" groups?
+Question 3. What are the average GDP rankings for the "High income: OECD" and "High income: nonOECD" groups?
 
 ``` r
 cat("The mean GDP ranking for High income: OECD countries is", mean(HIOECDGDP$Ranking), ".  ")
@@ -244,7 +244,7 @@ cat("The mean GDP ranking for High income: nonOECD countries is", mean(HINOECDGD
 
     ## The mean GDP ranking for High income: nonOECD countries is 91.91304 .
 
-1.  Plot the GDP for all of the countries. Use ggplot2 to color your plot by Income Group.
+Question 4. Plot the GDP for all of the countries. Use ggplot2 to color your plot by Income Group.
 
 ``` r
 print(ggplot(MergeGDPandStat, aes(MergeGDPandStat$Income.Group, MergeGDPandStat$GDP_USD)) +geom_bar(stat = "identity", aes(fill = Income.Group)) +labs(x = "Income Group", y = "GDP"))
@@ -252,7 +252,7 @@ print(ggplot(MergeGDPandStat, aes(MergeGDPandStat$Income.Group, MergeGDPandStat$
 
 ![](CS1Markdown_files/figure-markdown_github/barplot-1.png)
 
-1.  Cut the GDP ranking into 5 separate quantile groups. Make a table versus Income.Group. How many countries are Lower middle income but among the 38 nations with highest GDP?
+Question 5. Cut the GDP ranking into 5 separate quantile groups. Make a table versus Income.Group. How many countries are Lower middle income but among the 38 nations with highest GDP?
 
 ``` r
 Q5 <- subset(MergeGDPandStat, MergeGDPandStat$QuantileGroup=="1" & MergeGDPandStat$Income.Group=="Lower middle income")
