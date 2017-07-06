@@ -10,8 +10,14 @@ cat("The mean GDP ranking for High income: OECD countries is", mean(HIOECDGDP$Ra
 HINOECDGDP <- subset(MergeGDPandStat, MergeGDPandStat$Income.Group == "High income: nonOECD")
 cat("The mean GDP ranking for High income: nonOECD countries is", mean(HINOECDGDP$Ranking, na.rm = TRUE), ".  ")
 
-# Plot GDP for all countries by Income Group. 
-print(ggplot(MergeGDPandStat, aes(MergeGDPandStat$Income.Group, MergeGDPandStat$GDP_USD)) +geom_bar(stat = "identity", aes(fill = Income.Group)) +labs(x = "Income Group", y = "GDP"))
+# Plot Bar Graph of Total GDP by Income Group. 
+ggplot(MergeGDPandStat, aes(MergeGDPandStat$Income.Group, MergeGDPandStat$GDP_USD)) +geom_bar(stat = "identity", aes(fill = Income.Group)) +labs(x = "Income Group", y = "GDP")
+
+#Plot boxplot of GDP by Income Group on a log10 scale
+ggplot(MergeGDPandStat, aes(MergeGDPandStat$Income.Group, MergeGDPandStat$GDP_USD)) +geom_boxplot(aes(fill = Income.Group)) +labs(x = "Income Group", y = "GDP") +scale_y_log10()
+
+#Plot all countries by GDP on a log10 scale.
+ggplot(MergeGDPandStat, aes(x = reorder(MergeGDPandStat$CountryCode, MergeGDPandStat$GDP_USD), MergeGDPandStat$GDP_USD)) +geom_bar(stat = "identity", aes(fill = Income.Group)) +labs(x = "Income Group", y = "GDP (log10 scale)") +scale_y_continuous(trans = "log10")
 
 # Create quantile groups for GDP Rankings and compare to Income Group (Gartner MQ Style).  
 #create new column in MergeGDPandStat for Quantile group based on GDPRankQuant.  
