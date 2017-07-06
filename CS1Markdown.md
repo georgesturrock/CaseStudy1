@@ -247,6 +247,7 @@ cat("The mean GDP ranking for High income: nonOECD countries is", mean(HINOECDGD
 Question 4. Plot the GDP for all of the countries. Use ggplot2 to color your plot by Income Group.
 
 ``` r
+# A log10 scale is applied to the y axis to minimize the vizual impact of outliers on the bar graph.
 ggplot(MergeGDPandStat, aes(x = reorder(MergeGDPandStat$CountryCode, MergeGDPandStat$GDP_USD), MergeGDPandStat$GDP_USD)) +geom_bar(stat = "identity", aes(fill = Income.Group)) +labs(x = "Income Group", y = "GDP (log10 scale)") +scale_y_continuous(trans = "log10")
 ```
 
