@@ -15,3 +15,4 @@ This is the Case Study 1 repository for the MSDS 6306-402 group of Chayson Comfo
 
 ###
 * /data/ - folder with .csv files
+* /CS1Markdown_files/figure-markdown_github - folder with .png files containing the various plots displayed in the .md file
